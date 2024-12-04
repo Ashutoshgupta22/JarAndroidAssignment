@@ -22,9 +22,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            LaunchedEffect(Unit) {
-                viewModel.fetchData()
-            }
             JarAssignmentTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     AppNavigation(
