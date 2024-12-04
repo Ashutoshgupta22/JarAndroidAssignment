@@ -2,6 +2,7 @@ package com.myjar.jarassignment.ui.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -88,7 +89,26 @@ fun ItemCard(item: ComputerItem, onClick: () -> Unit) {
             .padding(8.dp)
             .clickable { onClick() }
     ) {
+        val data = item.data
         Text(text = item.name, fontWeight = FontWeight.Bold, color = Color.Black)
+        ItemDescription(title = "Color", text = data?.color)
+
+        data?.let {
+            when {
+                (it.capacity != null) -> {
+                    ItemDescription(title = "Capacity", text = it.capacity)
+                }
+
+                (it.price != null) -> {
+                    ItemDescription(title = "Price", text = "${it.price}")
+                }
+
+                (it.description != null) -> {
+                    Text(text = "Description: ${it.description}", color = Color.Gray)
+                }
+                else -> {}
+            }
+        }
     }
 }
 
@@ -102,4 +122,25 @@ fun ItemDetailScreen(itemId: String?) {
             .fillMaxSize()
             .padding(16.dp)
     )
+}
+
+@Composable
+fun ItemDescription(
+    modifier: Modifier = Modifier,
+    title: String,
+    text: String?
+) {
+    text?.let {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+        ) {
+            Text(text = "$title:", color = Color.Gray)
+            Text(
+                text = it, color = Color.Gray,
+                modifier = Modifier
+                    .padding(start = 4.dp)
+            )
+        }
+    }
 }
