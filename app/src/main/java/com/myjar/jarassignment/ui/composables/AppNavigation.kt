@@ -33,14 +33,14 @@ fun AppNavigation(
     viewModel: JarViewModel,
 ) {
     val navController = rememberNavController()
-    val navigate = remember { mutableStateOf<String>("") }
 
     NavHost(modifier = modifier, navController = navController, startDestination = "item_list") {
         composable("item_list") {
             ItemListScreen(
                 viewModel = viewModel,
-                onNavigateToDetail = { selectedItem -> navigate.value = selectedItem },
-                navigate = navigate,
+                onNavigateToDetail = { selectedItem ->
+                    navController.navigate("item_detail/${selectedItem}")
+                },
                 navController = navController
             )
         }
@@ -55,17 +55,10 @@ fun AppNavigation(
 fun ItemListScreen(
     viewModel: JarViewModel,
     onNavigateToDetail: (String) -> Unit,
-    navigate: MutableState<String>,
     navController: NavHostController
 ) {
     val items = viewModel.listStringData.collectAsState()
 
-    if (navigate.value.isNotBlank()) {
-        val currRoute = navController.currentDestination?.route.orEmpty()
-        if (!currRoute.contains("item_detail")) {
-            navController.navigate("item_detail/${navigate.value}")
-        }
-    }
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -106,6 +99,7 @@ fun ItemCard(item: ComputerItem, onClick: () -> Unit) {
                 (it.description != null) -> {
                     Text(text = "Description: ${it.description}", color = Color.Gray)
                 }
+
                 else -> {}
             }
         }
